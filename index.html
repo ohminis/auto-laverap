@@ -1383,12 +1383,50 @@
     const deckWrapper = document.getElementById('deck-wrapper');
     const overviewContainer = document.getElementById('overview-container');
 
-    function setViewMode(mode) {
-      currentView = mode;
-      document.getElementById('view-deck-btn').classList.toggle('active', mode === 'deck');
-      document.getElementById('view-doc-btn').classList.toggle('active', mode === 'doc');
+    function getInitialViewMode() {
+      // 1. Path routing (e.g. /resumen or /slides)
+      const pathname = window.location.pathname.toLowerCase();
+      if (pathname.includes('/resumen') || pathname.includes('/doc')) return 'doc';
+      if (pathname.includes('/diapositivas') || pathname.includes('/slides')) return 'deck';
 
-      if (mode === 'deck') {
+      // 2. Query parameter: ?view=diapositivas / ?view=resumen (o ?vista=, ?modo=)
+      const params = new URLSearchParams(window.location.search);
+      const viewParam = params.get('view') || params.get('vista') || params.get('modo');
+      if (viewParam) {
+        const val = viewParam.toLowerCase();
+        if (val === 'doc' || val === 'resumen' || val === 'memo' || val === 'overview') return 'doc';
+        if (val === 'deck' || val === 'diapositivas' || val === 'slides' || val === 'presentacion') return 'deck';
+      }
+
+      // 3. Hash routing: #resumen o #diapositivas
+      const hash = window.location.hash.toLowerCase().replace('#', '');
+      if (hash === 'doc' || hash === 'resumen' || hash === 'overview') return 'doc';
+      if (hash === 'deck' || hash === 'diapositivas' || hash === 'slides') return 'deck';
+
+      return 'deck';
+    }
+
+    function syncUrl() {
+      try {
+        const url = new URL(window.location);
+        url.searchParams.set('view', currentView === 'deck' ? 'diapositivas' : 'resumen');
+        if (currentView === 'deck' && activeSlideIndex > 0) {
+          url.searchParams.set('slide', activeSlideIndex + 1);
+        } else {
+          url.searchParams.delete('slide');
+        }
+        window.history.replaceState({}, '', url.toString());
+      } catch (e) {
+        // Fallback
+      }
+    }
+
+    function setViewMode(mode, shouldSyncUrl = true) {
+      currentView = (mode === 'doc' || mode === 'resumen') ? 'doc' : 'deck';
+      document.getElementById('view-deck-btn').classList.toggle('active', currentView === 'deck');
+      document.getElementById('view-doc-btn').classList.toggle('active', currentView === 'doc');
+
+      if (currentView === 'deck') {
         deckWrapper.style.display = 'block';
         overviewContainer.classList.remove('active');
         renderDeck();
@@ -1396,6 +1434,10 @@
         deckWrapper.style.display = 'none';
         overviewContainer.classList.add('active');
         renderOverview();
+      }
+
+      if (shouldSyncUrl) {
+        syncUrl();
       }
     }
 
@@ -1636,6 +1678,7 @@
 
       activeSlideIndex = index;
       renderDeck();
+      syncUrl();
 
       const activeEl = slideStageEl.querySelector('.slide-item.active');
       if (activeEl) {
@@ -1707,9 +1750,27 @@
       }
     }
 
-    // Initial boot
+    // Browser navigation (Back / Forward) support
+    window.addEventListener('popstate', () => {
+      const targetView = getInitialViewMode();
+      const params = new URLSearchParams(window.location.search);
+      const slideParam = parseInt(params.get('slide'), 10);
+      if (!isNaN(slideParam) && slideParam >= 1 && slideParam <= 4) {
+        activeSlideIndex = slideParam - 1;
+      }
+      setViewMode(targetView, false);
+    });
+
+    // Initial boot with URL parameter routing
+    const initialParams = new URLSearchParams(window.location.search);
+    const initialSlide = parseInt(initialParams.get('slide'), 10);
+    if (!isNaN(initialSlide) && initialSlide >= 1 && initialSlide <= 4) {
+      activeSlideIndex = initialSlide - 1;
+    }
+
+    currentView = getInitialViewMode();
     renderTabs();
-    renderDeck();
+    setViewMode(currentView, false);
   </script>
 </body>
 </html>

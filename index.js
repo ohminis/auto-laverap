@@ -23,7 +23,21 @@ const PORT = process.env.PORT || 3000;
 const HTML_FILE = path.join(__dirname, 'index.html');
 
 const server = http.createServer((req, res) => {
-  if (req.url === '/' || req.url === '/index.html' || req.url === '/sprint-review') {
+  const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+  const pathname = parsedUrl.pathname.toLowerCase();
+
+  // Rutas que sirven la aplicación frontend
+  const validAppRoutes = [
+    '/',
+    '/index.html',
+    '/sprint-review',
+    '/slides',
+    '/diapositivas',
+    '/resumen',
+    '/doc'
+  ];
+
+  if (validAppRoutes.includes(pathname)) {
     fs.readFile(HTML_FILE, 'utf8', (err, data) => {
       if (err) {
         res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
@@ -33,7 +47,7 @@ const server = http.createServer((req, res) => {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       res.end(data);
     });
-  } else if (req.url === '/api/config') {
+  } else if (pathname === '/api/config') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
       jiraBoardUrl: process.env.JIRA_BOARD_URL || null,
@@ -48,5 +62,7 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, () => {
   console.log(`\n🚀 Sprint Review · Lavandería de Barrio`);
   console.log(`📡 Servidor ejecutándose en: http://localhost:${PORT}`);
-  console.log(`👉 Presiona Ctrl + C para detener el servidor.\n`);
+  console.log(`👉 Modo Diapositivas: http://localhost:${PORT}/?view=diapositivas`);
+  console.log(`👉 Modo Resumen:      http://localhost:${PORT}/?view=resumen`);
+  console.log(`\nPresiona Ctrl + C para detener el servidor.\n`);
 });
