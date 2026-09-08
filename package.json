@@ -1,0 +1,19 @@
+{
+  "name": "auto-laverap-sprint-review",
+  "version": "1.0.0",
+  "description": "Dashboard interactivo y presentación ejecutiva de Sprint Reviews - Solución Lavandería de Barrio (PPIV)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "keywords": [
+    "sprint-review",
+    "dashboard",
+    "presentation",
+    "agile",
+    "jira"
+  ],
+  "author": "ohminis",
+  "license": "MIT"
+}
