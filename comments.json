@@ -1,0 +1,26 @@
+[
+  {
+    "id": "c_1788910965365_3qv7",
+    "sprintId": "2026-09-09",
+    "slideIndex": 2,
+    "slideTitle": "Bloqueantes y Métricas",
+    "author": "Emmanuel Espinoza",
+    "role": "PO Técnico",
+    "tag": "idea",
+    "text": "Proponer métrica de cobertura de pruebas para el siguiente sprint.",
+    "createdAt": "2026-09-08T23:42:45.365Z",
+    "resolved": false
+  },
+  {
+    "id": "c_sample_1",
+    "sprintId": "2026-09-09",
+    "slideIndex": 1,
+    "slideTitle": "Iniciativas y Estado",
+    "author": "Andrea Sánchez Liporace",
+    "role": "PO Técnico",
+    "tag": "change",
+    "text": "Verificar que los tickets de la vertical de pedidos coincidan con el tablero de Jira antes del viernes.",
+    "createdAt": "2026-09-08T19:30:00.000Z",
+    "resolved": false
+  }
+]

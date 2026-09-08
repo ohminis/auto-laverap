@@ -6,7 +6,7 @@
   <title>Sprint Review · Solución Lavandería de Barrio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       /* Paleta Executive Editorial Tech */
@@ -42,6 +42,23 @@
       --status-open-bg: #f1f5f9;
       --status-open-border: #cbd5e1;
 
+      /* Feedback Tags Semantics */
+      --tag-change-ink: #991b1b;
+      --tag-change-bg: #fef2f2;
+      --tag-change-border: #fecaca;
+      
+      --tag-question-ink: #1e40af;
+      --tag-question-bg: #eff6ff;
+      --tag-question-border: #bfdbfe;
+
+      --tag-idea-ink: #854d0e;
+      --tag-idea-bg: #fefce8;
+      --tag-idea-border: #fef08a;
+
+      --tag-general-ink: #374151;
+      --tag-general-bg: #f3f4f6;
+      --tag-general-border: #e5e7eb;
+
       /* Radii & Shadows */
       --radius-outer: 20px;
       --radius-inner: 14px;
@@ -50,6 +67,7 @@
       
       --shadow-ambient: 0 1px 2px rgba(18, 23, 17, 0.04), 0 12px 32px -4px rgba(18, 23, 17, 0.06);
       --shadow-card: 0 2px 6px rgba(18, 23, 17, 0.02), 0 6px 18px -2px rgba(18, 23, 17, 0.04);
+      --shadow-drawer: -4px 0 24px rgba(18, 23, 17, 0.1);
       --shadow-inner-glow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
       
       --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -147,11 +165,11 @@
       font-weight: 500;
     }
 
-    /* Action bar with View Toggle */
+    /* Action bar with View Toggle & Top Feedback trigger */
     .masthead-actions {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .view-toggle {
@@ -185,6 +203,41 @@
       background: var(--surface);
       color: var(--ink-primary);
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .top-feedback-btn {
+      appearance: none;
+      border: 1px solid var(--border-outer);
+      background: var(--surface);
+      color: var(--ink-secondary);
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s var(--ease-spring);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+
+    .top-feedback-btn:hover {
+      background: var(--accent-tint);
+      border-color: var(--border-accent);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .top-feedback-btn .badge-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: var(--accent-tint);
+      color: var(--accent);
+      padding: 1px 6px;
+      border-radius: var(--radius-pill);
+      font-weight: 700;
     }
 
     /* Tabs Bar (Sprint Selection) */
@@ -559,18 +612,18 @@
       border: 1px solid var(--status-open-border);
     }
 
-    .status-text {
-      font-size: 15px;
-      font-weight: 500;
-      line-height: 1.5;
-      color: var(--ink-primary);
-    }
-
     .status-text-group {
       display: flex;
       flex-direction: column;
       gap: 6px;
       flex: 1;
+    }
+
+    .status-text {
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.5;
+      color: var(--ink-primary);
     }
 
     .status-link-row {
@@ -844,6 +897,27 @@
       border-color: #252e23;
     }
 
+    .nav-btn.feedback-btn {
+      color: var(--accent);
+      border-color: rgba(31, 122, 73, 0.25);
+      background: var(--accent-tint);
+    }
+
+    .nav-btn.feedback-btn:hover:not(:disabled) {
+      background: #d8ecde;
+      border-color: var(--accent);
+    }
+
+    .nav-btn.feedback-btn .feedback-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--accent);
+      color: #ffffff;
+      padding: 1px 6px;
+      border-radius: var(--radius-pill);
+    }
+
     .nav-center-group {
       display: flex;
       align-items: center;
@@ -902,6 +976,10 @@
       box-shadow: 0 1px 0 rgba(0,0,0,0.06);
     }
 
+    .mobile-swipe-hint {
+      display: none;
+    }
+
     /* ALL-IN-ONE OVERVIEW MODE (Continuous Flow) */
     .all-in-one-view {
       display: none;
@@ -922,14 +1000,23 @@
       display: flex;
       flex-direction: column;
       gap: 20px;
+      position: relative;
     }
 
     .overview-section-header {
       display: flex;
-      align-items: baseline;
+      align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid var(--border-outer);
-      padding-bottom: 12px;
+      padding-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .overview-section-title-group {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
     }
 
     .overview-section-title {
@@ -939,11 +1026,555 @@
       color: var(--ink-primary);
     }
 
-    .mobile-swipe-hint {
+    .section-feedback-btn {
+      appearance: none;
+      border: 1px solid rgba(31, 122, 73, 0.25);
+      background: var(--accent-tint);
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s var(--ease-spring);
+    }
+
+    .section-feedback-btn:hover {
+      background: var(--accent);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    /* ==========================================================================
+       COMMENTS & FEEDBACK DRAWER (SIDE-PANEL / BOTTOM-SHEET)
+       ========================================================================== */
+    .comments-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(18, 23, 17, 0.35);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s var(--ease-spring), visibility 0.3s;
+    }
+
+    .comments-backdrop.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .comments-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 420px;
+      max-width: 100vw;
+      background: var(--surface);
+      box-shadow: var(--shadow-drawer);
+      z-index: 1001;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.35s var(--ease-spring);
+      border-left: 1px solid var(--border-outer);
+    }
+
+    .comments-drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-drag-handle {
+      display: none;
+      width: 40px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--ink-faint);
+      margin: 10px auto 4px;
+    }
+
+    .drawer-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--border-outer);
+      background: var(--surface);
+    }
+
+    .drawer-title-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .drawer-supertitle {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .drawer-heading {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink-primary);
+      letter-spacing: -0.02em;
+    }
+
+    .drawer-close-btn {
+      appearance: none;
+      border: 1px solid var(--border-outer);
+      background: var(--surface-nested);
+      color: var(--ink-muted);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s var(--ease-spring);
+    }
+
+    .drawer-close-btn:hover {
+      background: var(--bg-subtle);
+      color: var(--ink-primary);
+      transform: scale(1.05);
+    }
+
+    /* Filter Bar inside drawer */
+    .drawer-filter-bar {
+      display: flex;
+      padding: 10px 20px;
+      background: var(--surface-nested);
+      border-bottom: 1px solid var(--border-inner);
+      gap: 8px;
+    }
+
+    .drawer-filter-btn {
+      appearance: none;
+      border: 1px solid transparent;
+      background: transparent;
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-muted);
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .drawer-filter-btn:hover {
+      color: var(--ink-primary);
+    }
+
+    .drawer-filter-btn.active {
+      background: var(--surface);
+      border-color: var(--border-outer);
+      color: var(--ink-primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .drawer-filter-btn .count-pill {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      background: var(--bg-subtle);
+      padding: 1px 6px;
+      border-radius: var(--radius-pill);
+      color: var(--ink-secondary);
+    }
+
+    .drawer-filter-btn.active .count-pill {
+      background: var(--accent-tint);
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* Comments Feed Area */
+    .drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .comment-card {
+      background: var(--surface-nested);
+      border: 1px solid var(--border-inner);
+      border-radius: var(--radius-inner);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: all 0.2s var(--ease-spring);
+    }
+
+    .comment-card:hover {
+      background: var(--surface);
+      border-color: var(--border-outer);
+      box-shadow: var(--shadow-card);
+    }
+
+    .comment-card.resolved {
+      opacity: 0.65;
+      background: #fcfdfc;
+    }
+
+    .comment-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .comment-author-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .comment-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: var(--radius-sm);
+      background: var(--accent-tint);
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 1px solid rgba(31, 122, 73, 0.15);
+    }
+
+    .comment-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .comment-author-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink-primary);
+    }
+
+    .comment-author-role {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--ink-muted);
+    }
+
+    .comment-badges-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .comment-tag-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: var(--radius-pill);
+      border: 1px solid transparent;
+    }
+
+    .comment-tag-badge.tag-change {
+      background: var(--tag-change-bg);
+      color: var(--tag-change-ink);
+      border-color: var(--tag-change-border);
+    }
+
+    .comment-tag-badge.tag-question {
+      background: var(--tag-question-bg);
+      color: var(--tag-question-ink);
+      border-color: var(--tag-question-border);
+    }
+
+    .comment-tag-badge.tag-idea {
+      background: var(--tag-idea-bg);
+      color: var(--tag-idea-ink);
+      border-color: var(--tag-idea-border);
+    }
+
+    .comment-tag-badge.tag-general {
+      background: var(--tag-general-bg);
+      color: var(--tag-general-ink);
+      border-color: var(--tag-general-border);
+    }
+
+    .comment-body-text {
+      font-size: 13.5px;
+      line-height: 1.5;
+      color: var(--ink-primary);
+      word-break: break-word;
+    }
+
+    .comment-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border-inner);
+      padding-top: 8px;
+      margin-top: 2px;
+    }
+
+    .comment-time {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-faint);
+    }
+
+    .comment-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .comment-btn-action {
+      appearance: none;
+      border: none;
+      background: transparent;
+      font-family: var(--font-display);
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--ink-muted);
+      cursor: pointer;
+      padding: 3px 6px;
+      border-radius: 4px;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .comment-btn-action:hover {
+      color: var(--accent);
+      background: var(--accent-tint);
+    }
+
+    .comment-btn-action.delete:hover {
+      color: #dc2626;
+      background: #fee2e2;
+    }
+
+    .empty-comments-state {
+      text-align: center;
+      padding: 48px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      color: var(--ink-muted);
+    }
+
+    .empty-comments-state svg {
+      color: var(--ink-faint);
+    }
+
+    .empty-comments-state p {
+      font-size: 13.5px;
+      max-width: 260px;
+      line-height: 1.45;
+    }
+
+    /* Composer Form (Sticky Bottom) */
+    .drawer-composer {
+      padding: 16px 20px calc(16px + env(safe-area-inset-bottom, 0px));
+      border-top: 1px solid var(--border-outer);
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .composer-author-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .composer-avatar-preview {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      background: var(--accent-tint);
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 1px solid rgba(31, 122, 73, 0.2);
+    }
+
+    .composer-author-select-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .composer-author-select, .composer-custom-author-input {
+      width: 100%;
+      font-family: var(--font-display);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink-primary);
+      background: var(--surface-nested);
+      border: 1px solid var(--border-outer);
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .composer-author-select:focus, .composer-custom-author-input:focus {
+      border-color: var(--accent);
+      background: var(--surface);
+    }
+
+    .composer-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tag-radio-label {
+      cursor: pointer;
+    }
+
+    .tag-radio-label input {
       display: none;
     }
 
-    /* Responsive Design System (Tablets & Mobile Phones) */
+    .tag-radio-label .tag-pill {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-outer);
+      background: var(--surface-nested);
+      color: var(--ink-muted);
+      transition: all 0.15s;
+    }
+
+    .tag-radio-label input:checked + .tag-pill.tag-change {
+      background: var(--tag-change-bg);
+      color: var(--tag-change-ink);
+      border-color: var(--tag-change-border);
+    }
+
+    .tag-radio-label input:checked + .tag-pill.tag-question {
+      background: var(--tag-question-bg);
+      color: var(--tag-question-ink);
+      border-color: var(--tag-question-border);
+    }
+
+    .tag-radio-label input:checked + .tag-pill.tag-idea {
+      background: var(--tag-idea-bg);
+      color: var(--tag-idea-ink);
+      border-color: var(--tag-idea-border);
+    }
+
+    .tag-radio-label input:checked + .tag-pill.tag-general {
+      background: var(--tag-general-bg);
+      color: var(--tag-general-ink);
+      border-color: var(--tag-general-border);
+    }
+
+    .composer-textarea-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .composer-textarea {
+      width: 100%;
+      font-family: var(--font-display);
+      font-size: 13.5px;
+      color: var(--ink-primary);
+      background: var(--surface-nested);
+      border: 1px solid var(--border-outer);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      outline: none;
+      resize: vertical;
+      min-height: 64px;
+      transition: border-color 0.2s, background-color 0.2s;
+    }
+
+    .composer-textarea:focus {
+      border-color: var(--accent);
+      background: var(--surface);
+    }
+
+    .composer-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .composer-hint {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--ink-faint);
+    }
+
+    .composer-submit-btn {
+      appearance: none;
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: #ffffff;
+      font-family: var(--font-display);
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 7px 16px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s var(--ease-spring);
+    }
+
+    .composer-submit-btn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .composer-submit-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* ==========================================================================
+       RESPONSIVE DESIGN SYSTEM (TABLETS & MOBILE PHONES)
+       ========================================================================== */
     @media (max-width: 768px) {
       body {
         padding: 20px 14px 48px;
@@ -1012,6 +1643,9 @@
 
       .masthead-actions {
         width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
       }
 
       .view-toggle {
@@ -1026,6 +1660,12 @@
         padding: 8px 10px;
         font-size: 12px;
         min-height: 38px;
+      }
+
+      .top-feedback-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 8px 12px;
       }
 
       .tabs-wrapper {
@@ -1210,6 +1850,7 @@
       .deck-controls {
         padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0px));
         gap: 8px;
+        flex-wrap: wrap;
       }
 
       .nav-btn {
@@ -1246,8 +1887,51 @@
         gap: 16px;
       }
 
+      .overview-section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
       .overview-section-title {
         font-size: 16px;
+      }
+
+      .section-feedback-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 7px 12px;
+      }
+
+      /* Bottom-sheet mode for comments on mobile */
+      .comments-drawer {
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 85dvh;
+        max-height: 85dvh;
+        border-left: none;
+        border-top: 1px solid var(--border-outer);
+        border-radius: 20px 20px 0 0;
+        transform: translateY(100%);
+      }
+
+      .comments-drawer.open {
+        transform: translateY(0);
+      }
+
+      .drawer-drag-handle {
+        display: block;
+      }
+
+      .drawer-header {
+        padding: 12px 20px 12px;
+      }
+
+      .drawer-composer {
+        padding: 12px 16px calc(14px + env(safe-area-inset-bottom, 0px));
       }
     }
   </style>
@@ -1272,6 +1956,12 @@
           <button class="view-btn active" id="view-deck-btn" onclick="setViewMode('deck')">Diapositivas</button>
           <button class="view-btn" id="view-doc-btn" onclick="setViewMode('doc')">Resumen continuo</button>
         </div>
+
+        <button class="top-feedback-btn" id="top-comments-btn" onclick="toggleComments(true)" title="Abrir panel de feedback (Atajo: C)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span>Feedback</span>
+          <span class="badge-num" id="top-comment-badge">0</span>
+        </button>
       </div>
     </header>
 
@@ -1304,13 +1994,21 @@
           </div>
 
           <div style="display: flex; align-items: center; gap: 8px;">
+            <button class="nav-btn feedback-btn" id="deck-feedback-btn" onclick="toggleComments(true)" title="Feedback de esta slide (Atajo: C)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <span>Feedback</span>
+              <span class="feedback-badge" id="deck-feedback-badge">0</span>
+            </button>
+
             <div class="keyboard-hint-pill" title="Navega con flechas de teclado">
               <span class="kbd-key">←</span>
               <span class="kbd-key">→</span>
             </div>
+            
             <div class="mobile-swipe-hint" aria-hidden="true">
               <span>Deslizá ↔</span>
             </div>
+
             <button class="nav-btn primary" id="next-btn" aria-label="Siguiente diapositiva">
               <span>Siguiente</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
@@ -1325,6 +2023,103 @@
     <main class="all-in-one-view" id="overview-container"></main>
 
   </div>
+
+  <!-- ==========================================================================
+       COMMENTS & FEEDBACK DRAWER MODAL
+       ========================================================================== -->
+  <div class="comments-backdrop" id="comments-backdrop" onclick="toggleComments(false)"></div>
+  <aside class="comments-drawer" id="comments-drawer" aria-label="Panel de feedback del sprint">
+    
+    <div class="drawer-drag-handle" aria-hidden="true"></div>
+
+    <header class="drawer-header">
+      <div class="drawer-title-group">
+        <div class="drawer-supertitle">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span>Feedback del Squad</span>
+        </div>
+        <h2 class="drawer-heading" id="drawer-context-title">Slide 01: Portada</h2>
+      </div>
+      <button class="drawer-close-btn" onclick="toggleComments(false)" aria-label="Cerrar panel de comentarios">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </header>
+
+    <!-- Filter Tabs -->
+    <div class="drawer-filter-bar">
+      <button class="drawer-filter-btn active" id="filter-current-btn" onclick="setCommentFilter('current')">
+        <span>Esta sección</span>
+        <span class="count-pill" id="filter-current-count">0</span>
+      </button>
+      <button class="drawer-filter-btn" id="filter-all-btn" onclick="setCommentFilter('all')">
+        <span>Todo el sprint</span>
+        <span class="count-pill" id="filter-all-count">0</span>
+      </button>
+    </div>
+
+    <!-- Feed -->
+    <div class="drawer-body" id="comments-feed"></div>
+
+    <!-- Composer Form -->
+    <form class="drawer-composer" id="comment-form" onsubmit="handleCommentSubmit(event)">
+      
+      <!-- Author Selector -->
+      <div class="composer-author-row">
+        <div class="composer-avatar-preview" id="composer-avatar">OP</div>
+        <div class="composer-author-select-wrapper">
+          <select class="composer-author-select" id="comment-author-select" onchange="onAuthorSelectChange(this.value)">
+            <option value="Omar Pérez|PO Técnico">Omar Pérez (PO Técnico)</option>
+            <option value="Andrea Sánchez Liporace|PO Técnico">Andrea Sánchez Liporace (PO Técnico)</option>
+            <option value="Emmanuel Espinoza|PO Técnico">Emmanuel Espinoza (PO Técnico)</option>
+            <option value="Jose Vedia|PO Técnico">Jose Vedia (PO Técnico)</option>
+            <option value="Sofía Páez|PO Técnico">Sofía Páez (PO Técnico)</option>
+            <option value="__custom__">✍️ Escribir otro nombre...</option>
+          </select>
+          <input type="text" class="composer-custom-author-input" id="comment-custom-author" placeholder="Tu nombre y rol..." style="display: none;" oninput="onCustomAuthorInput(this.value)">
+        </div>
+      </div>
+
+      <!-- Tag Selector -->
+      <div class="composer-tags">
+        <label class="tag-radio-label">
+          <input type="radio" name="comment_tag" value="change" checked>
+          <span class="tag-pill tag-change">🔧 Cambio</span>
+        </label>
+        <label class="tag-radio-label">
+          <input type="radio" name="comment_tag" value="question">
+          <span class="tag-pill tag-question">❓ Pregunta</span>
+        </label>
+        <label class="tag-radio-label">
+          <input type="radio" name="comment_tag" value="idea">
+          <span class="tag-pill tag-idea">💡 Idea</span>
+        </label>
+        <label class="tag-radio-label">
+          <input type="radio" name="comment_tag" value="general">
+          <span class="tag-pill tag-general">📝 Nota</span>
+        </label>
+      </div>
+
+      <!-- Textarea & Submit -->
+      <div class="composer-textarea-wrapper">
+        <textarea 
+          class="composer-textarea" 
+          id="comment-text-input" 
+          placeholder="Escribe feedback o solicitud de cambio... (Ctrl+Enter para enviar)" 
+          rows="2"
+          required
+        ></textarea>
+        <div class="composer-actions">
+          <span class="composer-hint"><span class="kbd-key">Ctrl</span> + <span class="kbd-key">↵</span></span>
+          <button type="submit" class="composer-submit-btn" id="comment-submit-btn">
+            <span>Enviar</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </form>
+
+  </aside>
 
   <script>
     // Registro de sprints: Los más recientes se ubican al principio del array.
@@ -1368,9 +2163,22 @@
       }
     ];
 
+    const slideTitles = [
+      "01 · Portada y Squad",
+      "02 · Iniciativas y Estado",
+      "03 · Bloqueantes y Métricas",
+      "04 · Próximos Pasos"
+    ];
+
     let activeSprintIndex = 0;
     let activeSlideIndex = 0;
     let currentView = 'deck'; // 'deck' | 'doc'
+
+    // Comments State
+    let allComments = [];
+    let commentsDrawerOpen = false;
+    let commentsFilterMode = 'current'; // 'current' | 'all'
+    let targetCommentSlideIndex = 0;
 
     const tabsEl = document.getElementById('tabs');
     const countEl = document.getElementById('review-count');
@@ -1383,13 +2191,30 @@
     const deckWrapper = document.getElementById('deck-wrapper');
     const overviewContainer = document.getElementById('overview-container');
 
+    // Drawer elements
+    const commentsDrawer = document.getElementById('comments-drawer');
+    const commentsBackdrop = document.getElementById('comments-backdrop');
+    const commentsFeed = document.getElementById('comments-feed');
+    const drawerContextTitle = document.getElementById('drawer-context-title');
+    const filterCurrentBtn = document.getElementById('filter-current-btn');
+    const filterAllBtn = document.getElementById('filter-all-btn');
+    const filterCurrentCount = document.getElementById('filter-current-count');
+    const filterAllCount = document.getElementById('filter-all-count');
+    const deckFeedbackBadge = document.getElementById('deck-feedback-badge');
+    const topCommentBadge = document.getElementById('top-comment-badge');
+    const authorSelect = document.getElementById('comment-author-select');
+    const customAuthorInput = document.getElementById('comment-custom-author');
+    const composerAvatar = document.getElementById('composer-avatar');
+    const commentTextInput = document.getElementById('comment-text-input');
+
+    // =========================================================================
+    // ROUTING & VIEW MODES
+    // =========================================================================
     function getInitialViewMode() {
-      // 1. Path routing (e.g. /resumen or /slides)
       const pathname = window.location.pathname.toLowerCase();
       if (pathname.includes('/resumen') || pathname.includes('/doc')) return 'doc';
       if (pathname.includes('/diapositivas') || pathname.includes('/slides')) return 'deck';
 
-      // 2. Query parameter: ?view=diapositivas / ?view=resumen (o ?vista=, ?modo=)
       const params = new URLSearchParams(window.location.search);
       const viewParam = params.get('view') || params.get('vista') || params.get('modo');
       if (viewParam) {
@@ -1398,7 +2223,6 @@
         if (val === 'deck' || val === 'diapositivas' || val === 'slides' || val === 'presentacion') return 'deck';
       }
 
-      // 3. Hash routing: #resumen o #diapositivas
       const hash = window.location.hash.toLowerCase().replace('#', '');
       if (hash === 'doc' || hash === 'resumen' || hash === 'overview') return 'doc';
       if (hash === 'deck' || hash === 'diapositivas' || hash === 'slides') return 'deck';
@@ -1416,9 +2240,7 @@
           url.searchParams.delete('slide');
         }
         window.history.replaceState({}, '', url.toString());
-      } catch (e) {
-        // Fallback
-      }
+      } catch (e) {}
     }
 
     function setViewMode(mode, shouldSyncUrl = true) {
@@ -1439,8 +2261,12 @@
       if (shouldSyncUrl) {
         syncUrl();
       }
+      updateCommentBadges();
     }
 
+    // =========================================================================
+    // RENDERING CORE
+    // =========================================================================
     function renderTabs() {
       tabsEl.innerHTML = '';
       sprints.forEach((s, i) => {
@@ -1458,6 +2284,7 @@
           activeSprintIndex = i;
           activeSlideIndex = 0;
           renderTabs();
+          loadComments();
           if (currentView === 'deck') renderDeck();
           else renderOverview();
         });
@@ -1669,6 +2496,12 @@
       counterEl.textContent = `${activeSlideIndex + 1} / ${totalSlides}`;
       prevBtn.disabled = activeSlideIndex === 0;
       nextBtn.disabled = activeSlideIndex === totalSlides - 1;
+
+      targetCommentSlideIndex = activeSlideIndex;
+      updateCommentBadges();
+      if (commentsDrawerOpen) {
+        renderCommentsFeed();
+      }
     }
 
     function goToSlide(index) {
@@ -1693,22 +2526,403 @@
       overviewContainer.innerHTML = `
         <div class="overview-section">
           <div class="overview-section-header">
-            <h3 class="overview-section-title">${sprint.dateLabel}</h3>
-            <span class="project-tag">${sprint.sprintNumber || 'Sprint'}</span>
+            <div class="overview-section-title-group">
+              <h3 class="overview-section-title">${sprint.dateLabel}</h3>
+              <span class="project-tag">${sprint.sprintNumber || 'Sprint'}</span>
+            </div>
+            <button class="section-feedback-btn" onclick="openCommentsForSprint()" title="Ver feedback global">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <span>Feedback Global</span>
+            </button>
           </div>
           <div style="display: flex; flex-direction: column; gap: 32px;">
-            ${slides.map(s => `<div>${s.replace(/class="slide-item"/g, 'class="slide-item active"')}</div>`).join('')}
+            ${slides.map((s, idx) => {
+              const count = allComments.filter(c => c.sprintId === sprint.id && c.slideIndex === idx && !c.resolved).length;
+              return `
+                <div style="display: flex; flex-direction: column; gap: 10px; border-bottom: ${idx < slides.length - 1 ? '1px solid var(--border-inner)' : 'none'}; padding-bottom: ${idx < slides.length - 1 ? '24px' : '0'};">
+                  <div style="display: flex; justify-content: flex-end;">
+                    <button class="section-feedback-btn" onclick="openCommentsForSlide(${idx})" title="Comentar en esta sección">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                      <span>${count > 0 ? `${count} ${count === 1 ? 'nota' : 'notas'}` : 'Comentar sección'}</span>
+                    </button>
+                  </div>
+                  <div>${s.replace(/class="slide-item"/g, 'class="slide-item active"')}</div>
+                </div>
+              `;
+            }).join('')}
           </div>
         </div>
       `;
+      updateCommentBadges();
     }
 
-    // Event Listeners
+    // =========================================================================
+    // COMMENTS LOGIC & CRUD
+    // =========================================================================
+    async function loadComments() {
+      const currentSprintId = sprints[activeSprintIndex].id;
+      try {
+        const res = await fetch(`/api/comments?sprint=${encodeURIComponent(currentSprintId)}`);
+        if (res.ok) {
+          allComments = await res.json();
+        } else {
+          loadCommentsFromLocalStorage();
+        }
+      } catch (e) {
+        // Standalone / Offline fallback
+        loadCommentsFromLocalStorage();
+      }
+      updateCommentBadges();
+      if (commentsDrawerOpen) {
+        renderCommentsFeed();
+      }
+    }
+
+    function loadCommentsFromLocalStorage() {
+      try {
+        const stored = localStorage.getItem('auto_laverap_comments');
+        allComments = stored ? JSON.parse(stored) : [];
+      } catch (e) {
+        allComments = [];
+      }
+    }
+
+    function saveCommentsToLocalStorage() {
+      try {
+        localStorage.setItem('auto_laverap_comments', JSON.stringify(allComments));
+      } catch (e) {}
+    }
+
+    function updateCommentBadges() {
+      const currentSprintId = sprints[activeSprintIndex].id;
+      const sprintComments = allComments.filter(c => c.sprintId === currentSprintId && !c.resolved);
+      const slideComments = sprintComments.filter(c => c.slideIndex === activeSlideIndex);
+
+      topCommentBadge.textContent = sprintComments.length;
+      deckFeedbackBadge.textContent = slideComments.length;
+      filterCurrentCount.textContent = slideComments.length;
+      filterAllCount.textContent = sprintComments.length;
+    }
+
+    function toggleComments(open) {
+      commentsDrawerOpen = typeof open === 'boolean' ? open : !commentsDrawerOpen;
+      commentsDrawer.classList.toggle('open', commentsDrawerOpen);
+      commentsBackdrop.classList.toggle('open', commentsDrawerOpen);
+
+      if (commentsDrawerOpen) {
+        targetCommentSlideIndex = activeSlideIndex;
+        renderCommentsFeed();
+        setTimeout(() => commentTextInput.focus(), 150);
+      }
+    }
+
+    function openCommentsForSlide(slideIdx) {
+      targetCommentSlideIndex = slideIdx;
+      activeSlideIndex = slideIdx;
+      commentsFilterMode = 'current';
+      filterCurrentBtn.classList.add('active');
+      filterAllBtn.classList.remove('active');
+      toggleComments(true);
+    }
+
+    function openCommentsForSprint() {
+      commentsFilterMode = 'all';
+      filterCurrentBtn.classList.remove('active');
+      filterAllBtn.classList.add('active');
+      toggleComments(true);
+    }
+
+    function setCommentFilter(mode) {
+      commentsFilterMode = mode;
+      filterCurrentBtn.classList.toggle('active', mode === 'current');
+      filterAllBtn.classList.toggle('active', mode === 'all');
+      renderCommentsFeed();
+    }
+
+    function renderCommentsFeed() {
+      const currentSprintId = sprints[activeSprintIndex].id;
+      const currentSlideTitle = slideTitles[targetCommentSlideIndex] || 'Diapositiva';
+      
+      drawerContextTitle.textContent = commentsFilterMode === 'current' 
+        ? currentSlideTitle 
+        : `Todo el ${sprints[activeSprintIndex].sprintNumber || 'Sprint'}`;
+
+      let filtered = allComments.filter(c => c.sprintId === currentSprintId);
+      if (commentsFilterMode === 'current') {
+        filtered = filtered.filter(c => c.slideIndex === targetCommentSlideIndex);
+      }
+
+      updateCommentBadges();
+
+      if (filtered.length === 0) {
+        commentsFeed.innerHTML = `
+          <div class="empty-comments-state">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <p>No hay feedback registrado en ${commentsFilterMode === 'current' ? 'esta diapositiva' : 'este sprint'}.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const tagLabels = {
+        change: '🔧 Cambio',
+        question: '❓ Pregunta',
+        idea: '💡 Idea',
+        general: '📝 Nota'
+      };
+
+      commentsFeed.innerHTML = filtered.map(c => {
+        const initials = c.author ? c.author.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : '??';
+        const dateFormatted = new Date(c.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const slideName = slideTitles[c.slideIndex] || `Slide ${c.slideIndex + 1}`;
+
+        return `
+          <div class="comment-card ${c.resolved ? 'resolved' : ''}" id="comment-${c.id}">
+            <div class="comment-header">
+              <div class="comment-author-group">
+                <div class="comment-avatar">${initials}</div>
+                <div class="comment-meta">
+                  <span class="comment-author-name">${c.author}</span>
+                  <span class="comment-author-role">${c.role || 'Squad Member'}</span>
+                </div>
+              </div>
+              <div class="comment-badges-group">
+                <span class="comment-tag-badge tag-${c.tag || 'general'}">${tagLabels[c.tag] || '📝 Nota'}</span>
+              </div>
+            </div>
+
+            <p class="comment-body-text">${c.text.replace(/\n/g, '<br>')}</p>
+
+            <div class="comment-footer">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span class="comment-time">${dateFormatted}</span>
+                ${commentsFilterMode === 'all' ? `<span class="comment-time">· ${slideName}</span>` : ''}
+              </div>
+              <div class="comment-actions">
+                <button class="comment-btn-action" onclick="toggleResolveComment('${c.id}', ${!c.resolved})" title="${c.resolved ? 'Marcar como pendiente' : 'Marcar como resuelto'}">
+                  ${c.resolved ? '↩ Reabrir' : '✓ Resolver'}
+                </button>
+                <button class="comment-btn-action delete" onclick="deleteComment('${c.id}')" title="Eliminar comentario">
+                  🗑
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // =========================================================================
+    // AUTHOR HANDLING & PERSISTENCE
+    // =========================================================================
+    function getStoredAuthor() {
+      try {
+        return JSON.parse(localStorage.getItem('auto_laverap_author')) || { name: 'Omar Pérez', role: 'PO Técnico' };
+      } catch (e) {
+        return { name: 'Omar Pérez', role: 'PO Técnico' };
+      }
+    }
+
+    function saveStoredAuthor(name, role) {
+      try {
+        localStorage.setItem('auto_laverap_author', JSON.stringify({ name, role }));
+      } catch (e) {}
+    }
+
+    function initAuthorSelector() {
+      const saved = getStoredAuthor();
+      const selectVal = `${saved.name}|${saved.role}`;
+      let matched = false;
+
+      for (let i = 0; i < authorSelect.options.length; i++) {
+        if (authorSelect.options[i].value === selectVal) {
+          authorSelect.selectedIndex = i;
+          matched = true;
+          break;
+        }
+      }
+
+      if (!matched) {
+        authorSelect.value = '__custom__';
+        customAuthorInput.style.display = 'block';
+        customAuthorInput.value = `${saved.name} (${saved.role})`;
+      } else {
+        customAuthorInput.style.display = 'none';
+      }
+
+      updateAvatarPreview(saved.name);
+    }
+
+    function onAuthorSelectChange(val) {
+      if (val === '__custom__') {
+        customAuthorInput.style.display = 'block';
+        customAuthorInput.focus();
+        updateAvatarPreview(customAuthorInput.value || 'Squad');
+      } else {
+        customAuthorInput.style.display = 'none';
+        const [name, role] = val.split('|');
+        saveStoredAuthor(name, role);
+        updateAvatarPreview(name);
+      }
+    }
+
+    function onCustomAuthorInput(val) {
+      const name = val.split('(')[0].trim() || 'Squad';
+      updateAvatarPreview(name);
+      saveStoredAuthor(name, 'Squad Member');
+    }
+
+    function updateAvatarPreview(name) {
+      const clean = (name || 'Squad').trim();
+      const initials = clean.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'SQ';
+      composerAvatar.textContent = initials;
+    }
+
+    // =========================================================================
+    // SUBMIT & ACTIONS
+    // =========================================================================
+    async function handleCommentSubmit(e) {
+      e.preventDefault();
+      const text = commentTextInput.value.trim();
+      if (!text) return;
+
+      let author = '';
+      let role = 'Squad Member';
+
+      if (authorSelect.value === '__custom__') {
+        const raw = customAuthorInput.value.trim();
+        author = raw.split('(')[0].trim() || 'Anónimo';
+        role = raw.includes('(') ? raw.split('(')[1].replace(')', '').trim() : 'Squad Member';
+      } else {
+        const parts = authorSelect.value.split('|');
+        author = parts[0];
+        role = parts[1] || 'PO Técnico';
+      }
+
+      const tagInput = document.querySelector('input[name="comment_tag"]:checked');
+      const tag = tagInput ? tagInput.value : 'general';
+
+      const commentData = {
+        sprintId: sprints[activeSprintIndex].id,
+        slideIndex: targetCommentSlideIndex,
+        slideTitle: slideTitles[targetCommentSlideIndex] || 'Diapositiva',
+        author,
+        role,
+        tag,
+        text
+      };
+
+      try {
+        const res = await fetch('/api/comments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(commentData)
+        });
+
+        if (res.ok) {
+          const created = await res.json();
+          allComments.unshift(created);
+        } else {
+          fallbackLocalAdd(commentData);
+        }
+      } catch (err) {
+        fallbackLocalAdd(commentData);
+      }
+
+      commentTextInput.value = '';
+      renderCommentsFeed();
+      if (currentView === 'doc') {
+        renderOverview();
+      }
+    }
+
+    function fallbackLocalAdd(data) {
+      const localItem = {
+        ...data,
+        id: 'c_local_' + Date.now(),
+        createdAt: new Date().toISOString(),
+        resolved: false
+      };
+      allComments.unshift(localItem);
+      saveCommentsToLocalStorage();
+    }
+
+    async function toggleResolveComment(id, resolved) {
+      try {
+        const res = await fetch('/api/comments', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, resolved })
+        });
+        if (res.ok) {
+          const index = allComments.findIndex(c => c.id === id);
+          if (index !== -1) allComments[index].resolved = resolved;
+        } else {
+          fallbackLocalResolve(id, resolved);
+        }
+      } catch (e) {
+        fallbackLocalResolve(id, resolved);
+      }
+      renderCommentsFeed();
+      if (currentView === 'doc') renderOverview();
+    }
+
+    function fallbackLocalResolve(id, resolved) {
+      const index = allComments.findIndex(c => c.id === id);
+      if (index !== -1) {
+        allComments[index].resolved = resolved;
+        saveCommentsToLocalStorage();
+      }
+    }
+
+    async function deleteComment(id) {
+      if (!confirm('¿Deseas eliminar este comentario?')) return;
+      try {
+        const res = await fetch(`/api/comments?id=${encodeURIComponent(id)}`, {
+          method: 'DELETE'
+        });
+        if (res.ok) {
+          allComments = allComments.filter(c => c.id !== id);
+        } else {
+          allComments = allComments.filter(c => c.id !== id);
+          saveCommentsToLocalStorage();
+        }
+      } catch (e) {
+        allComments = allComments.filter(c => c.id !== id);
+        saveCommentsToLocalStorage();
+      }
+      renderCommentsFeed();
+      if (currentView === 'doc') renderOverview();
+    }
+
+    // =========================================================================
+    // EVENT LISTENERS & GESTURES
+    // =========================================================================
     prevBtn.addEventListener('click', () => goToSlide(activeSlideIndex - 1));
     nextBtn.addEventListener('click', () => goToSlide(activeSlideIndex + 1));
 
     document.addEventListener('keydown', (e) => {
-      if (currentView !== 'deck') return;
+      // Hotkey 'C' or 'c' to toggle feedback if not typing inside an input/textarea
+      if ((e.key === 'c' || e.key === 'C') && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
+        e.preventDefault();
+        toggleComments();
+        return;
+      }
+
+      // Esc to close comments
+      if (e.key === 'Escape' && commentsDrawerOpen) {
+        toggleComments(false);
+        return;
+      }
+
+      // Ctrl + Enter to submit comment
+      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && document.activeElement === commentTextInput) {
+        e.preventDefault();
+        document.getElementById('comment-form').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+        return;
+      }
+
+      if (currentView !== 'deck' || commentsDrawerOpen) return;
       if (e.key === 'ArrowRight' || e.key === 'PageDown') {
         goToSlide(activeSlideIndex + 1);
       } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
@@ -1736,16 +2950,15 @@
     }, { passive: true });
 
     function handleSwipe() {
-      if (currentView !== 'deck') return;
+      if (currentView !== 'deck' || commentsDrawerOpen) return;
       const deltaX = touchEndX - touchStartX;
       const deltaY = touchEndY - touchStartY;
       
-      // Ensure horizontal swipe clearly dominates vertical scroll to avoid accidental flips
       if (Math.abs(deltaX) > 35 && Math.abs(deltaX) > Math.abs(deltaY) * 1.3) {
         if (deltaX < 0) {
-          goToSlide(activeSlideIndex + 1); // Swipe left -> next
+          goToSlide(activeSlideIndex + 1);
         } else {
-          goToSlide(activeSlideIndex - 1); // Swipe right -> prev
+          goToSlide(activeSlideIndex - 1);
         }
       }
     }
@@ -1770,6 +2983,8 @@
 
     currentView = getInitialViewMode();
     renderTabs();
+    initAuthorSelector();
+    loadComments();
     setViewMode(currentView, false);
   </script>
 </body>
