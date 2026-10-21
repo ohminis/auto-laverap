@@ -2138,21 +2138,28 @@
         ],
         status: [
           { 
-            text: "Modelado relacional del esquema de base de datos transaccional y diseño de persistencia para logs de auditoría y trazabilidad", 
+            text: "Modelado relacional del esquema DB transaccional y persistencia para logs de auditoría", 
             state: "ok", 
             stateLabel: "Completado",
             link: "https://greenbox-group.atlassian.net/jira/core/projects/LV/board",
-            linkLabel: "Ver en Tablero Jira"
+            linkLabel: "Ver en Jira"
           },
           { 
-            text: "Formalización de la máquina de estados finitos (FSM) y matriz de transiciones del ciclo de vida de pedidos/servicios", 
+            text: "Formalización de la máquina de estados finitos (FSM) y matriz de transiciones del pedido", 
             state: "ok", 
             stateLabel: "Completado",
             link: "https://greenbox-group.atlassian.net/jira/core/projects/LV/board",
-            linkLabel: "Ver en Tablero Jira"
+            linkLabel: "Ver en Jira"
           },
           { 
-            text: "Verticales definitivas consolidadas y en ejecución: 1) Modelo de datos y capa de acceso (DAL), 2) Aviso automático a clientes, 3) Tablero de visibilidad operativa y 4) Alertas internas por demora (SLA)", 
+            text: "Avisos automáticos a clientes: historias creadas para detección/encolamiento de pedidos listos, despacho automatizado y regla de idempotencia (anti-duplicados)", 
+            state: "ok", 
+            stateLabel: "Completado",
+            link: "https://greenbox-group.atlassian.net/jira/core/projects/LV/board",
+            linkLabel: "Ver Historias Jira"
+          },
+          { 
+            text: "Verticales definitivas en ejecución: Modelo de datos & DAL, Avisos a clientes, Tablero de visibilidad y Alertas internas por demora (SLA)", 
             state: "pending", 
             stateLabel: "En curso",
             link: "https://greenbox-group.atlassian.net/jira/core/projects/LV/board",
@@ -2161,12 +2168,12 @@
         ],
         nextSteps: [
           { 
-            title: "Alineación y validación cruzada del modelo de datos con cada vertical funcional", 
-            subtitle: "Debatir compatibilidad del esquema con la lógica de negocio y necesidades específicas de cada módulo." 
+            title: "Validación cruzada del modelo de datos con verticales funcionales y alertas automáticas", 
+            subtitle: "Cruzar el esquema relacional con cada módulo, validando compatibilidad con el motor de alertas por demoras en SLA." 
           },
           { 
             title: "Factibilidad analítica y arquitectura de cómputo para KPIs del Dashboard", 
-            subtitle: "Verificar viabilidad de métricas con el esquema actual y definir estrategia de procesamiento (cálculo en API/DB vs. agregación on-the-fly)." 
+            subtitle: "Definir si las métricas se procesan vía queries analíticas on-demand o mediante persistencia pre-calculada en DB/API." 
           }
         ],
         metric: "",
